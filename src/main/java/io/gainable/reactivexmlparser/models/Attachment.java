@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final record Attachment(
+public record Attachment(
         Map<String, String> metadata,
         Map<String, String> uploadProperties,
         Map<String, String> contentProperties

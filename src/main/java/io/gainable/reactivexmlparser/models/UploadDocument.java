@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final record UploadDocument(Map<String, String> metadata,
-                                   Map<String, String> uploadProperties) implements EdiDocument {
+public record UploadDocument(Map<String, String> metadata,
+                             Map<String, String> uploadProperties) implements EdiDocument {
     @Override
     public Map<String, String> properties() {
         return Stream.concat(metadata.entrySet().stream(),
