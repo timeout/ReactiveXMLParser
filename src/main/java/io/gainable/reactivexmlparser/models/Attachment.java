@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 public final record Attachment(
         Map<String, String> metadata,
         Map<String, String> uploadProperties,
-        ByteDocument byteDocument
+        Map<String, String> contentProperties
 ) implements EdiDocument {
     @Override
     public Map<String, String> properties() {

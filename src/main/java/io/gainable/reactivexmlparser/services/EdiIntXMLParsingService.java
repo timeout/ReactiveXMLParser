@@ -1,5 +1,6 @@
 package io.gainable.reactivexmlparser.services;
 
+import io.gainable.reactivexmlparser.models.Attachment;
 import io.gainable.reactivexmlparser.models.EdiDocument;
 import io.gainable.reactivexmlparser.models.UploadDocument;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,12 @@ import java.util.NoSuchElementException;
 @Slf4j
 @Service
 public class EdiIntXMLParsingService {
+
+    private Map<String, String> attachmentTranslations = Map.of(
+            "FileName", "contentName",
+            "MimeType", "mimeType",
+            "ByteContent", "byteContent"
+    );
 
     private Map<String, String> fieldTranslations = Map.of(
             "UID", "ediUid",
@@ -120,6 +127,7 @@ public class EdiIntXMLParsingService {
             case "metaData" -> context.metadata = new HashMap<>();
             case "DocumentUploadSummary" -> context.uploadProperties = new HashMap<>();
             case "Field" -> context.fieldName = context.fieldValue = "";
+            case "Attachment" -> context.contentProperties = new HashMap<>();
         }
     }
 
@@ -155,10 +163,41 @@ public class EdiIntXMLParsingService {
                 case "Value" -> context.fieldValue = text;
             }
         }
+
+        if (context.uploadProperties != null && context.contentProperties != null && !context.xmlStreamReader.isWhiteSpace()) {
+            String text = context.xmlStreamReader.getText().trim();
+
+            if ("ByteContent".equals(context.currentElement) && (context.contentProperties.containsKey(attachmentTranslations.get("ByteContent")))) {
+                text = context.contentProperties.get(attachmentTranslations.get("ByteContent")) + text;
+            }
+
+            if (attachmentTranslations.containsKey(context.currentElement)) {
+                context.contentProperties.put(
+                        attachmentTranslations.get(context.currentElement),
+                        text
+                );
+            }
+        }
     }
 
     private void handleEndElement(ParsingContext context) {
         context.currentElement = context.xmlStreamReader.getLocalName();
+
+        if ("EDIArchiveMessage".equals(context.currentElement)) {
+            context.metadata = null;
+        }
+
+        if ("Attachment".equals(context.currentElement) && context.contentProperties != null && context.uploadProperties != null) {
+            final var withoutWhitespace =
+                    context.contentProperties.get("byteContent").replaceAll("\\s", "");
+            context.contentProperties.put("byteContent", withoutWhitespace);
+            context.ediDocument = new Attachment(
+                    context.metadata,
+                    context.uploadProperties,
+                    context.contentProperties
+            );
+            context.contentProperties = null;
+        }
 
         if ("Field".equals(context.currentElement) && context.fieldValue != null && context.fieldName != null && context.uploadProperties != null) {
             context.uploadProperties.put(
@@ -171,7 +210,6 @@ public class EdiIntXMLParsingService {
 
         if ("DocumentUploadSummary".equals(context.currentElement) && context.metadata != null && context.uploadProperties != null) {
             context.ediDocument = new UploadDocument(context.metadata, context.uploadProperties);
-            context.metadata = null;
             context.uploadProperties = null;
         }
     }
@@ -180,6 +218,7 @@ public class EdiIntXMLParsingService {
         XMLStreamReader xmlStreamReader;
         Map<String, String> metadata;
         Map<String, String> uploadProperties;
+        Map<String, String> contentProperties;
         String fieldName;
         String fieldValue;
         String currentElement;
