@@ -22,9 +22,6 @@ import java.util.Map;
 class EdiIntXMLParsingServiceTests {
 
     @Autowired
-    private TranslationProperties translationProperties;
-
-    @Autowired
     private EdiIntXMLParsingService ediIntXMLParsingService;
 
     @DisplayName("Parse a single EDIArchiveMessage without an attachment")
