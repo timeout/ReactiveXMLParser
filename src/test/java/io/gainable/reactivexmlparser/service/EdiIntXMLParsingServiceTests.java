@@ -1,9 +1,9 @@
-package io.gainable.reactivexmlparser.services;
+package io.gainable.reactivexmlparser.service;
 
 import io.gainable.reactivexmlparser.configuration.TranslationProperties;
-import io.gainable.reactivexmlparser.models.Attachment;
-import io.gainable.reactivexmlparser.models.EdiDocument;
-import io.gainable.reactivexmlparser.models.UploadDocument;
+import io.gainable.reactivexmlparser.dto.AttachmentDTO;
+import io.gainable.reactivexmlparser.dto.EdiDocumentDTO;
+import io.gainable.reactivexmlparser.dto.UploadDocumentDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
@@ -33,9 +32,9 @@ class EdiIntXMLParsingServiceTests {
     void testParseEdiIntXMLAsStream1() throws IOException {
         String filePath = new ClassPathResource("edi_int_document.xml").getFile().getAbsolutePath();
 
-        Flux<EdiDocument> ediDocuments = ediIntXMLParsingService.parseEdiIntXMLAsString(filePath);
+        Flux<EdiDocumentDTO> ediDocuments = ediIntXMLParsingService.parseEdiIntXMLAsString(filePath);
 
-        EdiDocument ediDocument = new UploadDocument(
+        EdiDocumentDTO ediDocumentDTO = new UploadDocumentDTO(
                 Map.of(
                         "ediReferenceId", "FR210300232060",
                         "ediTrackingId", "0001955097-ERP-3",
@@ -50,7 +49,7 @@ class EdiIntXMLParsingServiceTests {
         );
 
         StepVerifier.create(ediDocuments)
-                .expectNext(ediDocument)
+                .expectNext(ediDocumentDTO)
                 .verifyComplete();
     }
 
@@ -60,7 +59,7 @@ class EdiIntXMLParsingServiceTests {
         String filePath =
                 new ClassPathResource("edi_int_attachment.xml").getFile().getAbsolutePath();
 
-        Flux<EdiDocument> ediDocuments = ediIntXMLParsingService.parseEdiIntXMLAsString(filePath);
+        Flux<EdiDocumentDTO> ediDocuments = ediIntXMLParsingService.parseEdiIntXMLAsString(filePath);
 
         final var metadata = Map.of(
                 "ediReferenceId", "FR210300232060",
@@ -94,8 +93,8 @@ class EdiIntXMLParsingServiceTests {
         );
 
         StepVerifier.create(ediDocuments)
-                .expectNext(new Attachment(metadata, documentProperties, contentProperties))
-                .expectNext(new UploadDocument(metadata, documentProperties))
+                .expectNext(new AttachmentDTO(metadata, documentProperties, contentProperties))
+                .expectNext(new UploadDocumentDTO(metadata, documentProperties))
                 .verifyComplete();
     }
 }

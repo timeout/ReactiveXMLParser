@@ -1,6 +1,6 @@
-package io.gainable.reactivexmlparser.services;
+package io.gainable.reactivexmlparser.service;
 
-import io.gainable.reactivexmlparser.models.Document;
+import io.gainable.reactivexmlparser.dto.Document;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;

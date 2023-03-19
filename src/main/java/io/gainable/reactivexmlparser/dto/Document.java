@@ -1,4 +1,4 @@
-package io.gainable.reactivexmlparser.models;
+package io.gainable.reactivexmlparser.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

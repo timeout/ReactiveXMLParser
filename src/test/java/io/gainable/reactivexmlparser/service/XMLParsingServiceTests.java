@@ -1,6 +1,6 @@
-package io.gainable.reactivexmlparser.services;
+package io.gainable.reactivexmlparser.service;
 
-import io.gainable.reactivexmlparser.models.Document;
+import io.gainable.reactivexmlparser.dto.Document;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import reactor.core.publisher.Flux;
@@ -8,8 +8,6 @@ import reactor.test.StepVerifier;
 
 import java.io.IOException;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 class XMLParsingServiceTests {

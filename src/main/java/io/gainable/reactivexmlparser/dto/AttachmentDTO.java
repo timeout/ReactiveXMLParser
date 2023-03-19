@@ -1,14 +1,14 @@
-package io.gainable.reactivexmlparser.models;
+package io.gainable.reactivexmlparser.dto;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public record Attachment(
+public record AttachmentDTO(
         Map<String, String> metadata,
         Map<String, String> uploadProperties,
         Map<String, String> contentProperties
-) implements EdiDocument {
+) implements EdiDocumentDTO {
     @Override
     public Map<String, String> properties() {
         return Stream.concat(metadata.entrySet().stream(),

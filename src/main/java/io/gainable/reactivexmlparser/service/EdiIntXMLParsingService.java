@@ -1,9 +1,9 @@
-package io.gainable.reactivexmlparser.services;
+package io.gainable.reactivexmlparser.service;
 
 import io.gainable.reactivexmlparser.configuration.TranslationProperties;
-import io.gainable.reactivexmlparser.models.Attachment;
-import io.gainable.reactivexmlparser.models.EdiDocument;
-import io.gainable.reactivexmlparser.models.UploadDocument;
+import io.gainable.reactivexmlparser.dto.AttachmentDTO;
+import io.gainable.reactivexmlparser.dto.EdiDocumentDTO;
+import io.gainable.reactivexmlparser.dto.UploadDocumentDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -31,7 +31,7 @@ public class EdiIntXMLParsingService {
         this.translationProperties = translationProperties;
     }
 
-    public Flux<EdiDocument> parseEdiIntXMLAsString(String filePath) {
+    public Flux<EdiDocumentDTO> parseEdiIntXMLAsString(String filePath) {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         Supplier<InputStream> inputStreamSupplier = () -> {
             try {
@@ -62,7 +62,7 @@ public class EdiIntXMLParsingService {
         );
     }
 
-    private static class EdiDocumentIterator implements Iterator<EdiDocument>, AutoCloseable {
+    private static class EdiDocumentIterator implements Iterator<EdiDocumentDTO>, AutoCloseable {
         private final ParsingContext context;
         private final InputStream inputStream;
 
@@ -79,7 +79,7 @@ public class EdiIntXMLParsingService {
         }
 
         private boolean hasNextDocument() {
-            if (context.ediDocument != null) {
+            if (context.ediDocumentDTO != null) {
                 return true;
             }
 
@@ -87,7 +87,7 @@ public class EdiIntXMLParsingService {
                 while (context.xmlStreamReader.hasNext()) {
                     processEvent(context, translationProperties);
 
-                    if (context.ediDocument != null) {
+                    if (context.ediDocumentDTO != null) {
                         return true;
                     }
                 }
@@ -121,13 +121,13 @@ public class EdiIntXMLParsingService {
         }
 
         @Override
-        public EdiDocument next() {
+        public EdiDocumentDTO next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
 
-            EdiDocument result = context.ediDocument;
-            context.ediDocument = null;
+            EdiDocumentDTO result = context.ediDocumentDTO;
+            context.ediDocumentDTO = null;
             return result;
         }
 
@@ -247,7 +247,7 @@ public class EdiIntXMLParsingService {
                 final var withoutWhitespace =
                         context.contentProperties.get("byteContent").replaceAll("\\s", "");
                 context.contentProperties.put("byteContent", withoutWhitespace);
-                context.ediDocument = new Attachment(
+                context.ediDocumentDTO = new AttachmentDTO(
                         context.metadata,
                         context.uploadProperties,
                         context.contentProperties
@@ -265,7 +265,7 @@ public class EdiIntXMLParsingService {
             }
 
             if ("DocumentUploadSummary".equals(context.currentElement) && context.metadata != null && context.uploadProperties != null) {
-                context.ediDocument = new UploadDocument(context.metadata, context.uploadProperties);
+                context.ediDocumentDTO = new UploadDocumentDTO(context.metadata, context.uploadProperties);
                 context.uploadProperties = null;
             }
         }
@@ -279,7 +279,7 @@ public class EdiIntXMLParsingService {
         String fieldName;
         String fieldValue;
         String currentElement;
-        EdiDocument ediDocument;
+        EdiDocumentDTO ediDocumentDTO;
 
         public ParsingContext(XMLStreamReader xmlStreamReader) {
             this.xmlStreamReader = xmlStreamReader;
