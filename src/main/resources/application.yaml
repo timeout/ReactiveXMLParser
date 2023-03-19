@@ -1,0 +1,15 @@
+translation:
+  attachment:
+    FileName: contentName
+    MimeType: mimeType
+    ByteContent: byteContent
+  field:
+    UID: ediUid
+    SENDERGLN: supplierGln
+  document:
+    Repository: ediRepository
+  metadata:
+    CreationDate: originCreatedOn
+    ReferenceId: ediReferenceId
+    TrackId: ediTrackingId
+    UID: ediMessageUid

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<EDIArchiveMessage>
+    <metaData>
+        <Version>1</Version>
+        <TrackId>0001955097-ERP-3</TrackId>
+        <ReferenceId>FR210300232060</ReferenceId>
+        <Sender>
+            <SystemId>18</SystemId>
+            <SystemName>SEEBURGER</SystemName>
+            <Country>FR</Country>
+            <Company>LIDL</Company>
+        </Sender>
+        <Receiver>
+            <SystemId>79</SystemId>
+            <SystemName>EBIS</SystemName>
+            <Country>FR</Country>
+            <Company>LIDL</Company>
+        </Receiver>
+        <MessageSpecification>
+            <Type>EdiArchiveMessage</Type>
+        </MessageSpecification>
+        <MessageIdentifier>
+            <UID>f4450e50-c1e5-11eb-8e5c-084b0a030838</UID>
+        </MessageIdentifier>
+        <CreationDate>2021.05.31 09:58:20.151 MESZ</CreationDate>
+    </metaData>
+    <DocumentUploadSummary>
+        <System>EASY_Archive</System>
+        <Repository>EDI_FR</Repository>
+        <Schema>LIDL_EDI</Schema>
+        <Field>
+            <Name>SENDERGLN</Name>
+            <Value>3701035100020</Value>
+            <Type>number</Type>
+        </Field>
+        <Field>
+            <Name>UID</Name>
+            <Value>1184930</Value>
+            <Type>number</Type>
+        </Field>
+    </DocumentUploadSummary>
+</EDIArchiveMessage>
