@@ -1,20 +1,32 @@
 package io.gainable.reactivexmlparser.services;
 
+import io.gainable.reactivexmlparser.configuration.TranslationProperties;
 import io.gainable.reactivexmlparser.models.Attachment;
 import io.gainable.reactivexmlparser.models.EdiDocument;
 import io.gainable.reactivexmlparser.models.UploadDocument;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.io.IOException;
 import java.util.Map;
 
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class EdiIntXMLParsingServiceTests {
 
-    private final EdiIntXMLParsingService ediIntXMLParsingService = new EdiIntXMLParsingService();
+    @Autowired
+    private TranslationProperties translationProperties;
+
+    @Autowired
+    private EdiIntXMLParsingService ediIntXMLParsingService;
 
     @DisplayName("Parse a single EDIArchiveMessage without an attachment")
     @Test

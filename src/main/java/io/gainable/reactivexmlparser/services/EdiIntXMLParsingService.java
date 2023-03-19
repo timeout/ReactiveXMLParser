@@ -1,5 +1,6 @@
 package io.gainable.reactivexmlparser.services;
 
+import io.gainable.reactivexmlparser.configuration.TranslationProperties;
 import io.gainable.reactivexmlparser.models.Attachment;
 import io.gainable.reactivexmlparser.models.EdiDocument;
 import io.gainable.reactivexmlparser.models.UploadDocument;
@@ -24,27 +25,11 @@ import java.util.function.Supplier;
 @Service
 public class EdiIntXMLParsingService {
 
-    private static final Map<String, String> attachmentTranslations = Map.of(
-            "FileName", "contentName",
-            "MimeType", "mimeType",
-            "ByteContent", "byteContent"
-    );
+    private TranslationProperties translationProperties;
 
-    private static final Map<String, String> fieldTranslations = Map.of(
-            "UID", "ediUid",
-            "SENDERGLN", "supplierGln"
-    );
-
-    private static final Map<String, String> documentTranslations = Map.of(
-            "Repository", "ediRepository"
-    );
-
-    private static final Map<String, String> metadataTranslations = Map.of(
-            "CreationDate", "originCreatedOn",
-            "ReferenceId", "ediReferenceId",
-            "TrackId", "ediTrackingId",
-            "UID", "ediMessageUid"
-    );
+    public EdiIntXMLParsingService(TranslationProperties translationProperties) {
+        this.translationProperties = translationProperties;
+    }
 
     public Flux<EdiDocument> parseEdiIntXMLAsString(String filePath) {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
@@ -61,7 +46,7 @@ public class EdiIntXMLParsingService {
                     try {
                         InputStream inputStream = inputStreamSupplier.get();
                         XMLStreamReader xmlStreamReader = inputFactory.createXMLStreamReader(inputStream);
-                        return new EdiDocumentIterator(xmlStreamReader, inputStream);
+                        return new EdiDocumentIterator(xmlStreamReader, inputStream, translationProperties);
                     } catch (XMLStreamException e) {
                         throw new RuntimeException("Unable to create XMLStreamReader", e);
                     }
@@ -81,9 +66,16 @@ public class EdiIntXMLParsingService {
         private final ParsingContext context;
         private final InputStream inputStream;
 
-        public EdiDocumentIterator(XMLStreamReader xmlStreamReader, InputStream inputStream) {
+        private final TranslationProperties translationProperties;
+
+        public EdiDocumentIterator(
+                XMLStreamReader xmlStreamReader,
+                InputStream inputStream,
+                TranslationProperties translationProperties
+        ) {
             this.context = new ParsingContext(xmlStreamReader);
             this.inputStream = inputStream;
+            this.translationProperties = translationProperties;
         }
 
         private boolean hasNextDocument() {
@@ -93,7 +85,7 @@ public class EdiIntXMLParsingService {
 
             try {
                 while (context.xmlStreamReader.hasNext()) {
-                    processEvent(context);
+                    processEvent(context, translationProperties);
 
                     if (context.ediDocument != null) {
                         return true;
@@ -106,9 +98,9 @@ public class EdiIntXMLParsingService {
             return false;
         }
 
-        private void processEvent(ParsingContext context) throws XMLStreamException {
+        private void processEvent(ParsingContext context, TranslationProperties translationProperties) throws XMLStreamException {
             int eventType = context.xmlStreamReader.next();
-            EventProcessor eventProcessor = new EventProcessor(context);
+            EventProcessor eventProcessor = new EventProcessor(context, translationProperties);
 
             switch (eventType) {
                 case XMLStreamReader.START_ELEMENT:
@@ -167,10 +159,21 @@ public class EdiIntXMLParsingService {
     }
 
     private static class EventProcessor {
-        private ParsingContext context;
+        private final ParsingContext context;
+        private final Map<String, String> metadataTranslations;
+        private final Map<String, String> documentTranslations;
+        private final Map<String, String> fieldTranslations;
+        private final Map<String, String> attachmentTranslations;
 
-        public EventProcessor(ParsingContext context) {
+        public EventProcessor(
+                ParsingContext context,
+                TranslationProperties translationProperties
+        ) {
             this.context = context;
+            this.metadataTranslations = translationProperties.getMetadata();
+            this.documentTranslations = translationProperties.getDocument();
+            this.fieldTranslations = translationProperties.getField();
+            this.attachmentTranslations = translationProperties.getAttachment();
         }
 
         private void handleStartElement() {
