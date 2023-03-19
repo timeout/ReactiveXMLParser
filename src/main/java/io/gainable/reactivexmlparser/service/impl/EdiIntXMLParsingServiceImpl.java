@@ -1,9 +1,10 @@
-package io.gainable.reactivexmlparser.service;
+package io.gainable.reactivexmlparser.service.impl;
 
 import io.gainable.reactivexmlparser.configuration.TranslationProperties;
 import io.gainable.reactivexmlparser.dto.AttachmentDTO;
 import io.gainable.reactivexmlparser.dto.EdiDocumentDTO;
 import io.gainable.reactivexmlparser.dto.UploadDocumentDTO;
+import io.gainable.reactivexmlparser.service.interfaces.EdiIntXMLParsingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -23,11 +24,11 @@ import java.util.function.Supplier;
 
 @Slf4j
 @Service
-public class EdiIntXMLParsingService {
+public class EdiIntXMLParsingServiceImpl implements EdiIntXMLParsingService {
 
     private TranslationProperties translationProperties;
 
-    public EdiIntXMLParsingService(TranslationProperties translationProperties) {
+    public EdiIntXMLParsingServiceImpl(TranslationProperties translationProperties) {
         this.translationProperties = translationProperties;
     }
 

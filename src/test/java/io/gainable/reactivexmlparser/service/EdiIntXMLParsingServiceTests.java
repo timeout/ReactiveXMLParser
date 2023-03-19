@@ -1,9 +1,9 @@
 package io.gainable.reactivexmlparser.service;
 
-import io.gainable.reactivexmlparser.configuration.TranslationProperties;
 import io.gainable.reactivexmlparser.dto.AttachmentDTO;
 import io.gainable.reactivexmlparser.dto.EdiDocumentDTO;
 import io.gainable.reactivexmlparser.dto.UploadDocumentDTO;
+import io.gainable.reactivexmlparser.service.impl.EdiIntXMLParsingServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,7 @@ import java.util.Map;
 class EdiIntXMLParsingServiceTests {
 
     @Autowired
-    private EdiIntXMLParsingService ediIntXMLParsingService;
+    private EdiIntXMLParsingServiceImpl ediIntXMLParsingService;
 
     @DisplayName("Parse a single EDIArchiveMessage without an attachment")
     @Test
