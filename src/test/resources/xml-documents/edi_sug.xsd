@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="EDIArchiveMessage">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="metaData"/>
+        <xs:element maxOccurs="unbounded" ref="DocumentUploadSummary"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="metaData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Version"/>
+        <xs:element ref="TrackId"/>
+        <xs:element ref="ReferenceId"/>
+        <xs:element ref="Sender"/>
+        <xs:element ref="Receiver"/>
+        <xs:element ref="MessageSpecification"/>
+        <xs:element ref="MessageIdentifier"/>
+        <xs:element ref="CreationDate"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Version">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="TrackId">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="ReferenceId">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="Sender">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="SystemId"/>
+        <xs:element ref="SystemName"/>
+        <xs:element ref="Country"/>
+        <xs:element ref="Company"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Receiver">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="SystemId"/>
+        <xs:element ref="SystemName"/>
+        <xs:element ref="Country"/>
+        <xs:element ref="Company"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MessageSpecification">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Type"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MessageIdentifier">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="UID"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UID">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="CreationDate">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="DocumentUploadSummary">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="System"/>
+        <xs:element ref="Repository"/>
+        <xs:element ref="Schema"/>
+        <xs:element maxOccurs="unbounded" ref="Field"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="Attachment"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="System">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="Repository">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="Schema">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="Field">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Name"/>
+        <xs:sequence minOccurs="0">
+          <xs:element ref="Value"/>
+          <xs:element ref="Type"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Name">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="Value" type="xs:string"/>
+  <xs:element name="Attachment">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="FileName"/>
+        <xs:element ref="MimeType"/>
+        <xs:element ref="ByteContent"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FileName">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="MimeType">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="ByteContent">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="SystemId">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="SystemName">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="Country">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="Company" type="xs:string"/>
+  <xs:element name="Type">
+    <xs:complexType/>
+  </xs:element>
+</xs:schema>

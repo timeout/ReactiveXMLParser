@@ -1,0 +1,122 @@
+###
+# @name GetToken
+POST https://keycloak.{{host}}//auth/realms/ECM/protocol/openid-connect
+    /token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id=ecm-service-account&client_secret=GA42fBxqXNcjxLbJ4sOJA4lOOLUBswMu
+
+> {%
+    client.global.set("access_token", response.body.access_token);
+%}
+
+<> 2023-03-16T085204.200.json
+<> 2023-03-16T084732.200.json
+
+###
+# @name GetClassDefinition
+GET https://api.{{host}}/document-management/api/
+    classDefinitions/ediDocumentInt
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+<> 2023-03-16T085243.200.json
+
+###
+POST https://api.{{host}}/document-management/api/
+    documents
+Authorization: Bearer {{access_token}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="document"
+Content-Type: application/json
+
+
+{
+  "classDefinitionName": "ediDocumentInt",
+  "properties": {
+    "ediMessageType": "invoice",
+    "ediCountry": "DE",
+    "division": "ldl",
+    "ediRepository": "edidk"
+   }
+}
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="02ba0e8a-ae34-4812-9261-bc25707e50c1.data"
+
+// upload filename (associate with "file" form name)
+< /Users/gain/Documents/kltp_docs/data/02ba0e8a-ae34-4812-9261-bc25707e50c1.data
+
+###
+# @name SimpleUploadDocument
+// create an UploadDocument with 'pseudo' JSON ie. no attachment(s)
+POST https://api.{{host}}/document-management/api/
+    newDocuments
+Authorization: Bearer {{access_token}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="document"
+Content-Type: application/json
+
+
+{
+  "classDefinitionName": "ediDocumentInt",
+  "ediMessageType": "invoice",
+  "ediCountry": "DK",
+  "ediTrackingId": "0001954979",
+  "division": "ldl",
+  "ediRepository": "edidk"
+}
+
+--boundary
+Content-Disposition: form-data; name="content"; filename="0001954979.json"
+
+// upload filename (associate with "content" form name)
+< ../../apps/edi-importer/src/test/resources/file-content/0001954979.json
+
+###
+# @name Attachment
+// create an UploadDocument with content
+POST https://api.{{host}}/document-management/api/
+    newDocuments
+Authorization: Bearer {{access_token}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="document"
+Content-Type: application/json
+
+{
+  "classDefinitionName": "ediDocumentInt",
+  "ediMessageType": "invoice",
+  "ediCountry": "DE",
+  "ediTrackingId": "0001954980",
+  "ediRepository": "edidk",
+  "division": "ldl"
+}
+
+--boundary
+Content-Disposition: form-data; name="content"; filename="0001954979.json"
+
+// upload filename (associate with "file" form name)
+< ../../apps/edi-importer/src/test/resources/file-content/DK210300002859_20210531_CONVERTEDFILE.txt
+
+###
+# @name AddAttachmentToMainDocument
+// after creating a `main document` and an attachment use the created `object-id`
+// from the `main document` and created `version-id` from the `attachment` to
+// link the documents.
+// WARNING: use a `protocoll`, ie `vsid://` as a prefix to the `versions-id`s in
+// the list
+to the main document
+PUT https://api.{{host}}/document-management/api/
+    attachments/11c74cbe-5c82-4ee7-922e-5aba7a31e1b8
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+[
+  "vsid://fe879915-eccf-4531-9c57-42ab9dbfff90"
+]

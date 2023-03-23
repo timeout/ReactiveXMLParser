@@ -1,0 +1,7 @@
+{
+  "classDefinitionName": "ediDocumentInt",
+  "ediMessageType": "invoice",
+  "ediCountry": "DE",
+  "division": "ldl",
+  "ediRepository": "edidk"
+}
