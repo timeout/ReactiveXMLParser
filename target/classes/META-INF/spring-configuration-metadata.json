@@ -1,0 +1,32 @@
+{
+  "groups": [
+    {
+      "name": "translation",
+      "type": "de.schwarz.ecm.imoprters.apps.reactivexmlparser.configuration.TranslationProperties",
+      "sourceType": "de.schwarz.ecm.imoprters.apps.reactivexmlparser.configuration.TranslationProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "translation.attachment",
+      "type": "java.util.Map<java.lang.String,java.lang.String>",
+      "sourceType": "de.schwarz.ecm.imoprters.apps.reactivexmlparser.configuration.TranslationProperties"
+    },
+    {
+      "name": "translation.document",
+      "type": "java.util.Map<java.lang.String,java.lang.String>",
+      "sourceType": "de.schwarz.ecm.imoprters.apps.reactivexmlparser.configuration.TranslationProperties"
+    },
+    {
+      "name": "translation.field",
+      "type": "java.util.Map<java.lang.String,java.lang.String>",
+      "sourceType": "de.schwarz.ecm.imoprters.apps.reactivexmlparser.configuration.TranslationProperties"
+    },
+    {
+      "name": "translation.metadata",
+      "type": "java.util.Map<java.lang.String,java.lang.String>",
+      "sourceType": "de.schwarz.ecm.imoprters.apps.reactivexmlparser.configuration.TranslationProperties"
+    }
+  ],
+  "hints": []
+}
