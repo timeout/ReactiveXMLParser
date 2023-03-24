@@ -13,3 +13,11 @@ translation:
     ReferenceId: ediReferenceId
     TrackId: ediTrackingId
     UID: ediMessageUid
+
+solace:
+  java:
+    host: "tcp://localhost:55555"
+    msgVpn: "default"
+    clientUsername: "solace-username"
+    clientPassword: "solace-password"
+    queueName: "solace-queue"
